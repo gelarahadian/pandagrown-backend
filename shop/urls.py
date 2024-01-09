@@ -10,6 +10,7 @@ router.register('list', SeedListViewSet, basename='seeds-list')
 router.register('(?P<seed_id>\d+)/media', SeedMediaViewSet, basename='seed-media')
 router.register(r'', SeedViewSet)
 
+
 urlpatterns = [
     # Seed 
     path('seed/', include(router.urls)),
@@ -19,5 +20,6 @@ urlpatterns = [
     path('<int:user_id>/greenhouse/', GreenHouseListAPIView.as_view(), name='green-house-list'),
     path('<int:user_id>/warehouse/', WareHouseListAPIView.as_view(), name='ware-house-list'),
     path('<int:seed_user_id>/sell/harvest/', SellHarvestAPIView.as_view(), name='sell-harvest'),
-    path('<int:user_id>/sell/order/', SellOrderListAPIView.as_view(), name='sell-order-list')
+    path('<int:user_id>/sell/order/', SellOrderListAPIView.as_view(), name='sell-order-list'),
+    path('<int:user_id>/sell/test/', SellOrderListAPIView.as_view(), name='sell-order-list')
 ]
