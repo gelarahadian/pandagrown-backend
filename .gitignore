@@ -1,8 +1,8 @@
 venv/
 __pycache__
 .vscode
-# static
-# migrations
+static
+migrations
 **/__pycache__/
 *.pyc
-# **/migrations/
+**/migrations/
