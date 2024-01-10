@@ -14,7 +14,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.template import Template, Context
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework import viewsets
+from rest_framework import filters, viewsets, pagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from user_agents import parse
@@ -25,26 +25,44 @@ from basic_auth.authentication import JWTAuthentication
 from payment.models import TransactionLog
 from shop.models import SeedUser
 from user.models import Referrer, UserProfile, UserAgent
+from market.models import Market
 from market.serializers import MarketSerializer
 
 User = get_user_model()
 
-class MarketListView(PandaListView):
+class MarketPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class MarketViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    ordering = [ '-created_at']
-    queryset = User.objects.order_by(*ordering).all()
+    queryset = Market.objects.all()
     serializer_class = MarketSerializer
-    pagination_class = PandaPagination
-    def list(self, request, *args, **kwargs): 
-        self.pagination_class.page_size = request.query_params.get('page_size', self.pagination_class.page_size)
-        queryset = self.filter_queryset(self.get_queryset())
-        # Get the total count before pagination
-        total_count = queryset.count()
+    pagination_class = MarketPagination
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]  # Add OrderingFilter and SearchFilter backends
+    search_fields = ['name']  # Specify the fields to search for
+    def get_permissions(self):
+        if self.action in ['get']:
+            # Apply custom authentication only for POST, DELETE, UPDATE, PATCH
+            return [JWTAuthentication()]
+        else:
+            # Use default authentication for other actions
+            return super().get_permissions()
+    def get_queryset(self):
+        queryset = Market.objects.all()
+        sort_param = self.request.query_params.get('sort', None)
+        if sort_param:
+            # Determine the field and direction for sorting
+            sort_fields = sort_param.split(',')
+            ordering = []
+            for field in sort_fields:
+                if field.startswith('-'):
+                    ordering.append(f"-{field[1:].strip()}")
+                else:
+                    ordering.append(field.strip())
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data, total_count=total_count)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+            # Apply sorting to the queryset
+            queryset = queryset.order_by(*ordering)
+        queryset = queryset.filter(name__icontains=self.request.query_params.get('search', ''))
+        return queryset

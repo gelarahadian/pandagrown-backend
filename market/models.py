@@ -8,7 +8,7 @@ class Market(models.Model):
     stock = models.FloatField(default=0)
     benefit = models.IntegerField(default=0)
     benefit_type = models.CharField(blank=True, null=True)
-    cover_img = models.ImageField(upload_to='market/cover/')
+    cover_img = models.ImageField(upload_to='market/cover/', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
