@@ -7,7 +7,7 @@ from market.models import Market
 User = get_user_model()
 
 class MarketSerializer(serializers.ModelSerializer):
-    cover_img = serializers.ImageField(source='market.cover_img', read_only=True)
+    cover_img = serializers.ImageField(required = False)
     # referer_avatar = serializers.ImageField(source='userprofile.referer__avatar', read_only=True)  # Change this line to ImageField
     class Meta:
         model = Market
