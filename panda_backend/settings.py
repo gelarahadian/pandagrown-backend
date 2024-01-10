@@ -63,7 +63,10 @@ INSTALLED_APPS = [
     'base',
     'shop',
     'payment',
-    'websocket_app'
+    'websocket_app',
+    'market',
+    'p2p',
+    'inventory',
 ]
 
 
