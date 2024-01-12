@@ -1,30 +1,9 @@
 from channels.auth import get_user
 
-from panda_backend.utils import PandaPagination, PandaListView, PandaUpdateView, PandaDeleteView, calc_round
-from django.conf import settings
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
-from django.core import serializers
-from django.core.mail import EmailMessage, get_connection
-from django.db.models import F, ExpressionWrapper, CharField, Subquery, OuterRef, EmailField, Sum
-from django.http import HttpResponse
-from django.http import HttpRequest
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.template import Template, Context
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 from rest_framework import filters, viewsets, pagination
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from user_agents import parse
-import json
 
-from base.models import EmailSetting
 from basic_auth.authentication import JWTAuthentication
-from payment.models import TransactionLog
-from shop.models import SeedUser
-from user.models import Referrer, UserProfile, UserAgent
 from market.models import Market
 from market.serializers import MarketSerializer
 
