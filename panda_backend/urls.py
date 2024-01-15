@@ -30,6 +30,7 @@ urlpatterns = [
     path('shop/', include('shop.urls')),
     path('payment/', include('payment.urls')),
     path('market/', include('market.urls')),
+    path('inventory/', include('inventory.urls')),
    #  path('notifications/', include(url_patterens)),
     path('ws/', include(websocket_urlpatterns)),
 

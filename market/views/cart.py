@@ -42,6 +42,12 @@ class MarketCartListCreateAPIView(generics.ListCreateAPIView):
             return Response({"type": "failure", "detail": "lack of stock"}, status=status.HTTP_400_BAD_REQUEST)    
         # Call the base create() method to perform the default creation process
         return super().create(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        data = MarketCart.objects.filter(user_id=user_id)
+        data.delete()
+        return Response({'type': 'success'}, status=status.HTTP_200_OK)
+
 
 class MarketCartPurchase(APIView):
     authentication_classes = [JWTAuthentication]

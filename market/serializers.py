@@ -23,8 +23,9 @@ class MarketCartSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class MarketCartPurchaseSerializer(serializers.ModelSerializer):
+    market_data = MarketSerializer(source="market", read_only=True)
     class Meta:
         model = MarketCart
-        fields = ['id', 'market', 'user', 'purchased_amount', 'price_sum']
+        fields = ['id', 'market', 'user', 'purchased_amount', 'price_sum', 'market_data']
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
