@@ -41,10 +41,6 @@ class MarketUser(models.Model):
         (1, 'ordered')
     )
     status = models.IntegerField(choices=status_choices, default=0)
-    status_choices = (
-        (0, 'not set'),
-        (1, 'set')
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
